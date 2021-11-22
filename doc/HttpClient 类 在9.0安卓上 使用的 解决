@@ -1,0 +1,25 @@
+9.0以上 安卓 提示找不到 httpclient下的类？
+1、清单文件中 如下
+<application
+        android:usesCleartextTraffic="true">
+<!--        9.0以上安卓 找不到 org.apache.http.impl.client 下的类 需要添加这两行代码-->
+<!--        org.apache.http.impl.client-->
+<!--        <uses-library android:name="org.apache.http.legacy" android:required="false" />-->
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+2、build.gradle 文件中如下
+
+android {
+    compileSdk 31
+    //使用httpclient库需要添加这里
+    useLibrary 'org.apache.http.legacy'

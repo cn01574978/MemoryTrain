@@ -1,0 +1,23 @@
+封装xml协议，调用方法如下
+
+封装步骤：
+    1--封装叶子 Leaf 类       属性 标签和值
+    2--封装头部 Header 类     属性 new Leaf(); 构建叶子
+    3--封装身体 Body 类       属性 List<Element> elements=new ArrayList<Element>(); 构建元素
+    4--封装元素 Element 类    属性 抽象类，无属性，封装不同模块的数据，不同元素继承这个 类来写
+        每个请求都需要序列化自己:   public abstract void serializerElement(XmlSerializer serializer);
+        每个请求都有自己的标示:     public abstract String getTransactionType();
+        例如：
+            封装获取余额元素:      public class BalanceElement extends Element
+            封装投注请求:          public class BetElement extends Element
+    5--封装消息 Message 类    属性 new Header(); new Body(); 有头有身体
+                             方法 getXml(); 获取封装好的 xml 字符串 用来发送给服务器。
+====================================================================================================
+调用步骤：
+public void createXMl() {
+        Message message = new Message();
+        CurrentIssueElement element = new CurrentIssueElement();
+        element.getLotteryid().setTagValue("118");
+        String xml = message.getXml(element);
+        Log.d("jpt", "~:~createXMl:~ " + xml);
+    }

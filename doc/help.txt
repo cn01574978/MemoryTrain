@@ -1,0 +1,33 @@
+工程目录
+activitys 	        用来组织Activity类
+base	            基础共享的类，如多个Activity共享的BaseActivity或整个应用共享的MyApplication类
+adapter	            项目中用到的适配器类
+view	            自定义的View，如常用的TitleBarView
+util	            工具类，如HttpUtil，ImageUtil，FileUtil
+db	                数据库类，如DataBaseHelper，MessageDB
+service 	        服务类，如GetMsgService
+constant	        常量类
+controller          控制
+BLL                 业务逻辑
+DAO                 数据访问
+domain/modle/entity	元素实体类，如对应注册用户信息的User类，对应聊天信息的TextMessage类
+broadcast	        广播服务类
+---------------------------------------------------------------------------------------------
+Window flag: hide all screen decorations (such as the status bar) while this window is displayed.
+This allows the window to use the entire display space for itself --
+the status bar will be hidden when an app window with this flag set is on the top layer.
+A fullscreen window will ignore a value of SOFT_INPUT_ADJUST_RESIZE for the window's softInputMode field;
+the window will stay fullscreen and will not resize.
+
+This flag can be controlled in your theme through the android.R.attr.windowFullscreen attribute;
+this attribute is automatically set for you in the standard fullscreen themes such as android.R.style.Theme_NoTitleBar_Fullscreen,
+android.R.style.Theme_Black_NoTitleBar_Fullscreen, android.R.style.Theme_Light_NoTitleBar_Fullscreen,
+android.R.style.Theme_Holo_NoActionBar_Fullscreen, android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen,
+android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen, and android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen.
+Deprecated
+
+Use WindowInsetsController.hide(int) with WindowInsets.Type.statusBars() instead.
+隐藏导航栏什么的？
+需要在 setContentView(int i); 之后调用 窗口控制 api30 以上 可以用，api30 ↓ 提示异常
+
+

@@ -1,0 +1,76 @@
+1，和network有关比较耗时的操作放到一个子线程里,然后用Handler消息机制与主线程通信。
+public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.test);
+        // 开启一个子线程，进行网络操作，等待有返回结果，使用handler通知UI
+        new Thread(networkTask).start();
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("value");
+            Log.i("mylog", "请求结果为-->" + val);
+            // TODO
+            // UI界面的更新等相关操作
+        }
+    };
+
+    /**
+     * 网络操作相关的子线程
+     */
+    Runnable networkTask = new Runnable() {
+
+        @Override
+        public void run() {
+            // TODO
+            // 在这里进行 http request.网络请求相关操作
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            data.putString("value", "请求结果");
+            msg.setData(data);
+            handler.sendMessage(msg);
+        }
+    };
+2，使用异步机制如：asynctask，这个举个简单的加载网络图片的例子
+
+    class DownImage extends AsyncTask {
+
+        private ImageView imageView;
+
+        public DownImage(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String url = params[0];
+            Bitmap bitmap = null;
+            try {
+                //加载一个网络图片
+                InputStream is = new URL(url).openStream();
+                bitmap = BitmapFactory.decodeStream(is);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
+
+3，直接在main Thread 进行网络操作的方法，网上给出的，我没有具体测试：在发起Http请求的Activity里面的onCreate函数里面添加如下代码：
+
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+            .detectDiskReads().detectDiskWrites().detectNetwork()
+            .penaltyLog().build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+            .detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+            .penaltyLog().penaltyDeath().build());
+请记住，如果在Main Thread里声明了一个handler，这个handler所Post 的 Runnable（Thread）、以及处理的message都是在当前的mian线程里，非子线程。

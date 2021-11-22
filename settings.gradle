@@ -1,0 +1,4 @@
+rootProject.name = "MemoryTrain"
+include ':app'
+include ':memorytext'
+include ':testsqlite'

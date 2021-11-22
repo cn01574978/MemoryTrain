@@ -1,0 +1,44 @@
+在Android Studio中读取properties文件
+
+在开发过程中，如果有一些参数变量是需要经常改动的，就可以放在properties的配置文件中，而不用写死在代码中。如果想要修改这些参数，只需要在配置文件中修改即可。以Android Studio为例：
+
+1.首先在工程中建立assets文件夹，在文件夹中建立properties文件。
+
+首先，右键点击工程的app,选择New—>Folder—>Assets Folder，成功新建Assets文件夹。然后，右键点击新建的assets文件夹—>New—>File—>输入文件的名字为xxx.prop（这里命名为publish.properties）。
+
+2.在prop文件中添加需要灵活控制的参数，以键值对的形式添加，如：
+
+baseUrl=www.baudu.com
+3.加入读取参数的代码（实现一个方法）：
+public class PropertiesUtil {
+    public static String load(String key) {
+        String value = null;
+        Properties properties = new Properties();
+        try {
+            properties.load(BaseApplication.getInstance().getAssets().open("publish.properties"));
+            value = properties.getProperty(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+}
+
+在这里需要传入获取参数的key值以及Context值，即可获取返回的value值。如果想要修改，也只需要在prop文件中修改即可，不需要修改代码。
+
+4.如果想要获取，假设展示在Activity中：
+
+
+PropertiesUtil.load(ConstantValue.Config.BaseUrl)
+
+我的常见问题？坑我N多时间
+1、properties.load(BaseApplication.getInstance().getAssets().open("publish.properties"));
+   调用 BaseApplication.getInstance() 方法时，需要新建一个 BaseApplication 类，并继承Application类
+   然后在 这个类中 自定义实现 getInstance() ；
+
+2、清单文件 一点要更名为 BaseApplication ；
+
+3、配置文件路径 一定要用 “.” ， 不能使用 “/” ? 超级坑 ，复制的路径是 带 “/” 的，记得一定要改
+   例如：
+   UserController=com.xyys.memorytrain.engine.controller.UserControllerImpl  → 正确
+   UserController=com/xyys/memorytrain/controller/UserControllerImpl  → 错误
